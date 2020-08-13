@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TesteCandidatoTriangulo
 {
@@ -23,7 +20,29 @@ namespace TesteCandidatoTriangulo
         public int ResultadoTriangulo(string dadosTriangulo)
         {
 
-            return 0;
+            /*
+             * Tive dificuldade para converter manualmente a string 'dadosTriangulo' em array multidimensional e usei o pacote Newtonsoft.Json
+             * Essa linha de conversão tirei de:
+             * https://stackoverflow.com/questions/33822264/c-sharp-convert-string-to-a-two-dimensional-string-array
+             * 
+             * var result = Newtonsoft.Json.JsonConvert.DeserializeObject<string[][]>(foobarString);
+             * 
+             */
+            var multiArray = Newtonsoft.Json.JsonConvert.DeserializeObject<List<List<int>>>(dadosTriangulo);
+
+            List<int> valores = new List<int>();    // armazena a lista de valores encontrados para somar.
+            int posicaoAnterior = 0;                // armazena a posição do último valor encontrado para soma.
+
+
+            multiArray.ForEach(a =>
+            {
+                var v = a.Skip(posicaoAnterior).Take(2).Max();      // ignora o número de elementos antes da variável posicaoAnterior e recupera o número máximo entre os próximos 2 números.
+                posicaoAnterior = a.IndexOf(v);                     // captura a posição do número encontrado
+                valores.Add(v);
+            });
+
+
+            return valores.Sum();
         }
     }
 }
